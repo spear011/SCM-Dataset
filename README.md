@@ -8,7 +8,7 @@ Links to both datasets are provided below.
 - ComMU Dataset [[Paper]](https://arxiv.org/pdf/2211.09385.pdf) [[Dataset]](https://github.com/POZAlabs/ComMU-code)
 - NSynyh Dataset [[Paper]](https://arxiv.org/pdf/1704.01279.pdf) [[Dataset]](https://magenta.tensorflow.org/datasets/nsynth#files)
 
-### MIDI to Audio
+### MIDI to Audio Rendering
 
 Rendering the midi I used into audio can be found [here](https://github.com/spear011/NSynth-MIDI-Renderer-for-massive-MIDI-dataset.git)
 
