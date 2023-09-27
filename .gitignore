@@ -28,7 +28,7 @@
 *.tax2010
 *.vcf
 *.xml
-
+data/
 ### Linux ###
 *~
 

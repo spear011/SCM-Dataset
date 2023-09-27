@@ -1,102 +1,31 @@
-import os
-import sys
-import random
-from tqdm import tqdm
-import pandas as pd
-import numpy as np
+import argparse
+from multiprocessing import cpu_count
+from pathlib import Path
 
-commu_folder = sys.argv[1]
-commu_meta = pd.read_csv(os.path.join(commu_folder, 'commu_meta.csv'), index_col=0)
+from commu.preprocessor import PreprocessPipeline
 
-labels = commu_meta['track_role'].values.tolist()
+def get_root_parser() -> argparse.ArgumentParser:
+    root_parser = argparse.ArgumentParser("dataset preprocessing", add_help=True)
+    root_parser.add_argument("--root_dir", type=str, required=True, help="root directory containing 'raw' directory")
+    root_parser.add_argument("--csv_path", type=str, required=True, help="csv file path containing meta info")
+    root_parser.add_argument("--num_cores", type=int, default=max(1, cpu_count() - 4))
+    return root_parser
 
-m_melody_idx =[i for i, v in enumerate(labels) if v == 'main_melody']
-s_melody_idx = [i for i, v in enumerate(labels) if v == 'sub_melody']
-bass_idx = [i for i, v in enumerate(labels) if v == 'bass']
-accom_idx = [i for i, v in enumerate(labels) if v == 'accompaniment']
-riff_idx = [i for i, v in enumerate(labels) if v == 'riff']
-pad_idx = [i for i, v in enumerate(labels) if v == 'pad']
 
-def index_select(idx, num):
-    random.shuffle(idx)
-    return idx[:num]
+def main(args: argparse.Namespace) -> None:
+    root_dir = Path(args.root_dir).expanduser()
+    pipeline = PreprocessPipeline()
+    pipeline(
+        root_dir=root_dir,
+        csv_path=args.csv_path,
+        num_cores=args.num_cores,
+    )
 
-m_melody_idx = index_select(m_melody_idx, 500)
-s_melody_idx = index_select(s_melody_idx, 500)
-bass_idx = index_select(bass_idx, 500)
-accom_idx = index_select(accom_idx, 500)
-riff_idx = index_select(riff_idx, 500)
-pad_idx = index_select(pad_idx, 500)
 
-def index_split(idx, valid_ratio, test_ratio):
-    random.shuffle(idx)
-    test_num = int(len(idx) * test_ratio)
-    test_idx = idx[:test_num]
-    train_idx = idx[test_num:]
-    
-    valid_num = int(len(train_idx) * valid_ratio)
-    valid_idx = train_idx[:valid_num]
-    train_idx = train_idx[valid_num:]
-    return train_idx, valid_idx, test_idx
+if __name__ == "__main__":
+    import warnings
+    warnings.filterwarnings("ignore")
 
-idx_list = [m_melody_idx, s_melody_idx, bass_idx, accom_idx, riff_idx, pad_idx]
-
-train_idx = np.array([], dtype=int)
-valid_idx = np.array([], dtype=int)
-test_idx = np.array([], dtype=int)
-
-for lists in idx_list:
-    train, valid, test = index_split(lists, 0.1, 0.2)
-    train_idx = np.append(train_idx, train)
-    valid_idx = np.append(valid_idx, valid)
-    test_idx = np.append(test_idx, test)
-
-random.shuffle(train_idx)
-random.shuffle(valid_idx)
-random.shuffle(test_idx)
-
-all_idx = np.concatenate((train_idx, valid_idx, test_idx), axis=0)
-
-balanced_df = commu_meta.loc[all_idx]
-balanced_df['split'] = None
-
-balanced_df.loc[train_idx, 'split'] = 'train'
-balanced_df.loc[valid_idx, 'split'] = 'valid'
-balanced_df.loc[test_idx, 'split'] = 'test'
-
-balanced_df.reset_index(drop=True, inplace=True)
-
-print('train samples: ', len(train_idx), 'valid samples: ', len(valid_idx), 'test samples: ', len(test_idx))
-
-commu_midi_dir = os.path.join(commu_folder, 'commu_midi')
-balanced_dir = os.path.join(commu_folder, 'balanced')
-
-os.mkdir(balanced_dir)
-os.mkdir(os.path.join(balanced_dir, 'train'))
-os.mkdir(os.path.join(balanced_dir, 'valid'))
-os.mkdir(os.path.join(balanced_dir, 'test'))
-
-print('copying selected midi files...')
-
-for idx, v in tqdm(enumerate(balanced_df['id'])):
-
-    split_data = balanced_df['split_data'].values[idx]
-    current_folder = os.path.join(commu_midi_dir, split_data + '/raw/')
-    current_file = os.path.join(current_folder, v + '.mid')
-
-    split = balanced_df['split'].values[idx]
-
-    if split == 'train':
-        os.system('cp ' + current_file + ' ' + os.path.join(balanced_dir, 'train', v + '.mid'))
-    
-    elif split == 'valid':
-        os.system('cp ' + current_file + ' ' + os.path.join(balanced_dir, 'valid', v + '.mid'))
-    
-    elif split == 'test':
-        os.system('cp ' + current_file + ' ' + os.path.join(balanced_dir, 'test', v + '.mid'))
-
-balanced_df.drop(['split_data'], axis=1, inplace=True)
-balanced_df.rename(columns={'split': 'split_data'}, inplace=True)
-
-balanced_df.to_csv(os.path.join(balanced_dir, 'balanced_meta.csv'), index=False)
-print('done')
+    parser = get_root_parser()
+    known_args, _ = parser.parse_known_args()
+    main(known_args)

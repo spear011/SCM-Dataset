@@ -23,3 +23,40 @@ Rendering the midi I used into audio can be found [here](https://github.com/spea
 
 - Classes: 6 perfectly balanced Track Role
   - Main/Sub Melody, Accompaniment, Pad, Bass, Riff
+
+## Getting Started
+
+### Setup
+1. Clone this repository
+2. Download Datasets (ComMU, NSynth)
+3. Install required packages
+    ```
+    pip install -r requirements.txt
+    ```
+
+## Preparation
+- The ComMU dataset can be preprocessed to achieve balanced Track role classes.
+    ```
+    $ python preparation.py data-folder
+    ```
+- After successful preprocessing, project tree would be like this,
+  ```
+    .
+    ├── commu_meta.csv
+    ├── commu_midi
+    └── balanced
+        ├── balanced_meta.csv
+        ├── train
+        │   ├── raw
+        ├── valid
+        │   ├── raw
+        └── test
+            └── raw
+
+    ```
+
+## Augmentation
+- You can augment training data provided by the [[ComMU-code]](https://github.com/POZAlabs/ComMU-code). The augmentation process will only involve the training data.
+    '''
+    $ python preprocess.py --root_dir ./data-folder/balanced --csv_path ./data-folder/balanced/balanced_meta.csv
+    ```
