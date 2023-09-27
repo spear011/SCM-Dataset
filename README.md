@@ -57,6 +57,6 @@ Rendering the midi I used into audio can be found [here](https://github.com/spea
 
 ## Augmentation
 - You can augment training data provided by the [[ComMU-code]](https://github.com/POZAlabs/ComMU-code). The augmentation process will only involve the training data.
-    '''
+    ```
     $ python preprocess.py --root_dir ./data-folder/balanced --csv_path ./data-folder/balanced/balanced_meta.csv
     ```
