@@ -12,9 +12,9 @@ from utils.config import *
 from synthesizer.NoteSynthesizer import NoteSynthesizer
 
 Nsynth_dir = sys.argv[1]
-output_dir = sys.argv[2]
+data_folder = sys.argv[2]
+output_dir = sys.argv[3]
 
-data_folder = './data'
 csv_path = os.path.join(data_folder, 'balanced', 'balanced_mata.csv')
 midi_df = pd.read_csv(csv_path)
 

@@ -62,3 +62,24 @@ Rendering the midi I used into audio can be found [[here]](https://github.com/sp
     ```
 
 ### MIDI to Audio
+    ```
+    $ python synthesize.py Nsynth-dir data-folder output-dir
+    ```
+
+# Examples
+
+- Output audio file name is same as the MIDI file with the preset and source information added. 'midifile-name_preset_source.wav' 
+- The files in the /output folder looks like this
+
+```bash
+output_dir/audio/train/midifile01_030_1.wav
+output_dir/audio/train/midifile02_002_0.wav
+output_dir/audio/val/midifile03_random_random.wav
+```
+
+- Output csv: synthesized_results.csv
+|id|instrument|preset|source|
+|---|---|---|---|
+|midifile01|keyboard|030|1|
+|midifile02|guitar|002|0|
+|midifile03|guitar|random|random|
