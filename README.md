@@ -78,6 +78,7 @@ output_dir/audio/val/midifile03_random_random.wav
 ```
 
 - Output csv: synthesized_results.csv
+
 |id|instrument|preset|source|
 |---|---|---|---|
 |midifile01|keyboard|030|1|
