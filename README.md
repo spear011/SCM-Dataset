@@ -12,7 +12,7 @@ Links to both datasets are provided below.
 
 Rendering the midi I used into audio can be found [[here]](https://github.com/spear011/NSynth-MIDI-Renderer-for-massive-MIDI-dataset.git)
 
-## Dataset Overview
+# Dataset Overview
 
 - Number of Samples: 130,440
   - Train: 129,600
@@ -24,9 +24,9 @@ Rendering the midi I used into audio can be found [[here]](https://github.com/sp
 - Classes: 6 perfectly balanced Track Role
   - Main/Sub Melody, Accompaniment, Pad, Bass, Riff
 
-## Getting Started
+# Getting Started
 
-### Setup
+## Setup
 1. Clone this repository
 2. Download Datasets (ComMU, NSynth)
 3. Install required packages
@@ -34,7 +34,7 @@ Rendering the midi I used into audio can be found [[here]](https://github.com/sp
     pip install -r requirements.txt
     ```
 
-### Preparation
+## Preparation
 - The ComMU dataset can be preprocessed to achieve balanced Track role classes.
     ```
     $ python preparation.py data-folder
@@ -55,13 +55,13 @@ Rendering the midi I used into audio can be found [[here]](https://github.com/sp
 
     ```
 
-### Augmentation
+## Augmentation
 - You can augment training data provided by the [[ComMU-code]](https://github.com/POZAlabs/ComMU-code). The augmentation process will only involve the training data.
     ```
     $ python preprocess.py --root_dir ./data-folder/balanced --csv_path ./data-folder/balanced/balanced_meta.csv
     ```
 
-### MIDI to Audio
+## MIDI to Audio
     ```
     $ python synthesize.py Nsynth-dir data-folder output-dir
     ```
