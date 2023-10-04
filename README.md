@@ -10,7 +10,7 @@ Links to both datasets are provided below.
 
 ### MIDI to Audio Rendering
 
-Rendering the midi I used into audio can be found [here](https://github.com/spear011/NSynth-MIDI-Renderer-for-massive-MIDI-dataset.git)
+Rendering the midi I used into audio can be found [[here]](https://github.com/spear011/NSynth-MIDI-Renderer-for-massive-MIDI-dataset.git)
 
 ## Dataset Overview
 
@@ -34,7 +34,7 @@ Rendering the midi I used into audio can be found [here](https://github.com/spea
     pip install -r requirements.txt
     ```
 
-## Preparation
+### Preparation
 - The ComMU dataset can be preprocessed to achieve balanced Track role classes.
     ```
     $ python preparation.py data-folder
@@ -55,8 +55,10 @@ Rendering the midi I used into audio can be found [here](https://github.com/spea
 
     ```
 
-## Augmentation
+### Augmentation
 - You can augment training data provided by the [[ComMU-code]](https://github.com/POZAlabs/ComMU-code). The augmentation process will only involve the training data.
     ```
     $ python preprocess.py --root_dir ./data-folder/balanced --csv_path ./data-folder/balanced/balanced_meta.csv
     ```
+
+### MIDI to Audio

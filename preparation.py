@@ -8,25 +8,29 @@ import numpy as np
 commu_folder = sys.argv[1]
 commu_meta = pd.read_csv(os.path.join(commu_folder, 'commu_meta.csv'), index_col=0)
 
-labels = commu_meta['track_role'].values.tolist()
-
-m_melody_idx =[i for i, v in enumerate(labels) if v == 'main_melody']
-s_melody_idx = [i for i, v in enumerate(labels) if v == 'sub_melody']
-bass_idx = [i for i, v in enumerate(labels) if v == 'bass']
-accom_idx = [i for i, v in enumerate(labels) if v == 'accompaniment']
-riff_idx = [i for i, v in enumerate(labels) if v == 'riff']
-pad_idx = [i for i, v in enumerate(labels) if v == 'pad']
-
 def index_select(idx, num):
     random.shuffle(idx)
     return idx[:num]
 
-m_melody_idx = index_select(m_melody_idx, 500)
-s_melody_idx = index_select(s_melody_idx, 500)
-bass_idx = index_select(bass_idx, 500)
-accom_idx = index_select(accom_idx, 500)
-riff_idx = index_select(riff_idx, 500)
-pad_idx = index_select(pad_idx, 500)
+def get_idx_list(commu_meta):
+    labels = commu_meta['track_role'].values.tolist()
+    
+    m_melody_idx =[i for i, v in enumerate(labels) if v == 'main_melody']
+    s_melody_idx = [i for i, v in enumerate(labels) if v == 'sub_melody']
+    bass_idx = [i for i, v in enumerate(labels) if v == 'bass']
+    accom_idx = [i for i, v in enumerate(labels) if v == 'accompaniment']
+    riff_idx = [i for i, v in enumerate(labels) if v == 'riff']
+    pad_idx = [i for i, v in enumerate(labels) if v == 'pad']
+
+    m_melody_idx = index_select(m_melody_idx, 500)
+    s_melody_idx = index_select(s_melody_idx, 500)
+    bass_idx = index_select(bass_idx, 500)
+    accom_idx = index_select(accom_idx, 500)
+    riff_idx = index_select(riff_idx, 500)
+    pad_idx = index_select(pad_idx, 500)
+
+    idx_list = [m_melody_idx, s_melody_idx, bass_idx, accom_idx, riff_idx, pad_idx]
+    return idx_list
 
 def index_split(idx, valid_ratio, test_ratio):
     random.shuffle(idx)
@@ -39,11 +43,11 @@ def index_split(idx, valid_ratio, test_ratio):
     train_idx = train_idx[valid_num:]
     return train_idx, valid_idx, test_idx
 
-idx_list = [m_melody_idx, s_melody_idx, bass_idx, accom_idx, riff_idx, pad_idx]
-
 train_idx = np.array([], dtype=int)
 valid_idx = np.array([], dtype=int)
 test_idx = np.array([], dtype=int)
+
+idx_list = get_idx_list(commu_meta)
 
 for lists in idx_list:
     train, valid, test = index_split(lists, 0.1, 0.2)
